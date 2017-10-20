@@ -7,17 +7,23 @@
     "express": "^4.16.2",
     "express-graphql": "^0.6.11",
     "graphql": "^0.11.7",
+    "mongoose": "^4.12.3",
     "node": "^8.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "nodemon": "^1.12.1"
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "nodemon": "^1.12.1",
+    "request": "^2.83.0",
+    "sinon": "^4.0.1"
   },
   "scripts": {
-    "babel-node": "babel-node --ignore='/node_modules\/'",
+    "babel-node": "babel-node --ignore='/node_modules/'",
     "start": "nodemon --exec npm run babel-node -- ./server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --require babel-register ./server/spec/serverSpec.js"
   },
   "repository": {
     "type": "git",
