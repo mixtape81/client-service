@@ -1,0 +1,27 @@
+{
+  "name": "development",
+  "version": "1.0.0",
+  "description": "Client service for mixtape",
+  "main": ".eslintrc.js",
+  "dependencies": {
+    "express": "^4.16.2",
+    "node": "^8.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "scripts": {
+    "start": "nodemon ./server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slaymance/mixtape.git"
+  },
+  "author": "Shane Laymance",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slaymance/mixtape/issues"
+  },
+  "homepage": "https://github.com/slaymance/mixtape#readme"
+}
