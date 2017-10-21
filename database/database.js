@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import Users from './users.js';
+import Users from './users';
 
 const mongoDB = 'mongodb://localhost/mixtape';
 mongoose.connect(mongoDB, {
-  useMongoClient: true
+  useMongoClient: true,
 });
 
 const db = mongoose.connection;
