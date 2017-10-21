@@ -1,13 +1,34 @@
-import mongoose from 'mongoose';
-import Users from './users';
+import Sequelize from 'sequelize';
+import pgCreds from '../credentials/pgCreds';
 
-const mongoDB = 'mongodb://localhost/mixtape';
-mongoose.connect(mongoDB, {
-  useMongoClient: true,
+const sequelize = new Sequelize({
+  database: pgCreds.database,
+  username: pgCreds.username,
+  password: pgCreds.password,
+  dialect: 'postgres',
+  logging: false
 });
 
-const db = mongoose.connection;
-db.on('error', err => console.error(err));
-db.once('open', () => console.log('MongoDB connected!'));
+sequelize.authenticate()
+  .then(() => console.log('Postgres connected'))
+  .catch(err => console.error('Problem with Postgres: ', err));
 
-export default db;
+const User = sequelize.define('user', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  joinDate: Sequelize.DATE,
+  birthDate: Sequelize.DATE,
+  location: Sequelize.STRING,
+  paidStatus: Sequelize.BOOLEAN,
+  genreGroup: Sequelize.INTEGER,
+  favoriteArtists: Sequelize.ARRAY(Sequelize.INTEGER)
+});
+
+User.sync()
+  .then(() => console.log('Successfully created User table'))
+  .catch(err => console.error('Error syncing users: ', err));
+
+export default sequelize;
