@@ -25,6 +25,7 @@ module.exports = {
       "devDependencies": [
         "spec/**",
       ]
-    }]
+    }],
+    "comma-dangle": ["error", "never"]
   }
 };
