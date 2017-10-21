@@ -1,12 +1,18 @@
-import { expect } from 'chai';
-import request from 'request';
+import supertest from 'supertest';
+import app from '../server/app';
+
+const request = supertest.agent(app);
+const port = 7357;
+
+beforeEach((done) => {
+  const server = app.listen(port, done);
+  afterEach(() => server.close());
+});
 
 describe('Client Server', () => {
-  it('Should answer GET requests', (done) => {
+  it('Should reject GET requests', (done) => {
     request
-      .get('http://localhost:3000', (err, res) => {
-        expect(res.statusCode).to.equal(404);
-        done();
-      });
+      .get('/')
+      .expect(404, done);
   });
 });
