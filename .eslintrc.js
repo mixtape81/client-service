@@ -20,6 +20,11 @@ module.exports = {
             "MethodDefinition": true,
             "ClassDeclaration": true
         }
+    }],
+    "import/no-extraneous-dependencies": ["error", {
+      "devDependencies": [
+        "spec/**",
+      ]
     }]
   }
 };
