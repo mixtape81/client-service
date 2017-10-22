@@ -29,7 +29,7 @@
   "scripts": {
     "babel-node": "babel-node --ignore='/node_modules/'",
     "start": "nodemon --exec npm run babel-node -- ./server/server.js",
-    "test": "mocha --require babel-register ./spec/serverSpec.js"
+    "test": "mocha --require babel-register --reporter nyan --recursive ./spec/"
   },
   "repository": {
     "type": "git",
