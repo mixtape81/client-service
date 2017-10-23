@@ -5,7 +5,6 @@ const db = require('../database/database');
 
 const request = supertest.agent(app);
 const port = 7357;
-const tables = ['User'];
 
 beforeEach((done) => {
   const server = app.listen(port);
