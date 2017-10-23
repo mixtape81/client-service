@@ -1,21 +1,26 @@
-import express from 'express';
-import graphqlHTTP from 'express-graphql';
-import { buildSchema } from 'graphql';
+const express = require('express');
+const db = require('../database/database');
 
 const app = express();
 
-const schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
+app.post('/users', (req, res) => {
+  const user = {
+    joinDate: new Date(),
+    birthDate: new Date(),
+    location: 'San Francisco',
+    paidStatus: true,
+    genreGroup: 3,
+    favoriteArtists: [4, 2, 6, 8]
+  };
 
-const root = { hello: () => 'Hello world!' };
+  db.User.create(user)
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.send(400);
+    });
+});
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  rootValue: root,
-  graphiql: true
-}));
-
-export default app;
+module.exports = app;
