@@ -73,8 +73,9 @@ The user information is stored in a PostgresQL database. Refer to the table belo
 | 1 | 2017-10-10 14:47:20.872-07 | 25 | true | 3 | [4, 2, 6, 8] | [1, 67, 21, 2] | 1 |
 - **Age** is the age of the user between 18 - 70
 - **paidStatus** is true if the user pays for the service, false if otherwise
-- **genreGroup** is an array of the user's favorite genres by ID (reference the [music-inventory](https://github.com/mixtape81/music-inventory) repository for details)
+- **genreGroup** is the genre's ID to which the user belongs for clustering purposes
 - **favoriteArtists** is an array of the user's favorite artists by ID (reference the [music-inventory](https://github.com/mixtape81/music-inventory) repository for details)
+- **favoriteGenres** is an array of the user's favorite genres by ID (reference the [music-inventory](https://github.com/mixtape81/music-inventory) repository for details)
 - **locationId** refers to the user's location by id, which is relational to the *locations* table schema below:
 
 | id | name |
