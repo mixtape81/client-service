@@ -1,5 +1,7 @@
-const Sequelize = require('sequelize');
-const pgCreds = require('../credentials/pgCreds');
+import Sequelize from 'sequelize';
+import pgCreds from '../credentials/pgCreds';
+import LocationSchema from './models/Locations';
+import UserSchema from './models/Users';
 
 const databaseName = process.env.NODE_ENV === 'test' ?
   pgCreds.databaseSpec : pgCreds.database;
@@ -15,9 +17,6 @@ const db = new Sequelize({
 db.authenticate()
   .catch(err => console.error('Problem with Postgres: ', err));
 
-const LocationSchema = require('./models/Locations');
-const UserSchema = require('./models/Users');
-
 const Location = db.define('location', LocationSchema);
 const User = db.define('user', UserSchema);
 
@@ -30,7 +29,7 @@ if (process.env.NODE_ENV !== 'test') {
     .catch(err => console.error('Error syncing users: ', err));
 }
 
-module.exports = {
+export default {
   db,
   Location,
   User

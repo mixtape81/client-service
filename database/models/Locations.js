@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize';
 
 const LocationSchema = {
   id: {
@@ -9,4 +9,4 @@ const LocationSchema = {
   name: Sequelize.STRING
 };
 
-module.exports = LocationSchema;
+export default LocationSchema;

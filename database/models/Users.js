@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize';
 
 const UserSchema = {
   id: {
@@ -14,4 +14,4 @@ const UserSchema = {
   favoriteGenres: Sequelize.ARRAY(Sequelize.INTEGER)
 };
 
-module.exports = UserSchema;
+export default UserSchema;
