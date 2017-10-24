@@ -7,6 +7,7 @@ import {
   GraphQLInt,
   GraphQLBoolean
 } from 'graphql/type';
+import GraphQLDate from 'graphql-date';
 
 import db from '../database/database';
 
@@ -16,60 +17,78 @@ import db from '../database/database';
  * @return {Project}
  */
 
-const todoType = new GraphQLObjectType({
-  name: 'todo',
-  description: 'todo item',
+const locationType = new GraphQLObjectType({
+  name: 'location',
+  description: 'user\'s location',
   fields: () => ({
-    itemId: {
+    id: {
       type: (GraphQLInt),
-      description: 'The id of the todo.'
+      description: 'Location ID'
     },
-    item: {
-      type: GraphQLString,
-      description: 'The name of the todo.'
-    },
-    completed: {
-      type: GraphQLBoolean,
-      description: 'Completed todo? '
+    name: {
+      type: (GraphQLString),
+      description: 'Location name'
     }
   })
 });
 
-const getProjection = (fieldASTs) => {
-  return fieldASTs.fieldNodes[0].selectionSet.selections.reduce((projections, selection) => {
-    projections[selection.name.value] = true;
-    return projections;
-  }, {});
-}
+const userType = new GraphQLObjectType({
+  name: 'user',
+  description: 'service user',
+  fields: () => ({
+    id: {
+      type: (GraphQLInt),
+      description: 'A user\'s ID'
+    },
+    joinDate: {
+      type: (GraphQLDate),
+      description: 'A user\'s join date'
+    },
+    age: {
+      type: (GraphQLInt),
+      description: 'A user\'s age between 18 - 70'
+    },
+    paidStatus: {
+      type: (GraphQLBoolean),
+      description: 'True if a paid user, false otherwise'
+    },
+    genreGroup: {
+      type: (GraphQLInt),
+      description: 'A number which identifies a user as belonging to a certain genre cluster'
+    },
+    favoriteArtists: {
+      type: new GraphQLList(GraphQLInt),
+      description: 'A list of the user\'s 5 favorite artists\' IDs'
+    },
+    favoriteGenres: {
+      type: new GraphQLList(GraphQLInt),
+      description: 'A list of the user\'s 5 favorite genres\' IDs'
+    },
+    location: {
+      type: locationType,
+      resolve: user => db.Location.find({ where: { id: user.locationId } })
+    }
+  })
+});
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-      todo: {
-        type: new GraphQLList(todoType),
+      user: {
+        type: new GraphQLList(userType),
         args: {
-          itemId: {
-            name: 'itemId',
-            type: new GraphQLNonNull(GraphQLInt)
+          id: {
+            name: 'id',
+            type: (GraphQLInt)
           }
         },
-        resolve: (root, { itemId }, source, fieldASTs) => {
-          const projections = getProjection(fieldASTs);
-          const foundItems = new Promise((resolve, reject) => {
-            db.User.find({itemId}, projections,(err, todos) => {
-              err ? reject(err) : resolve(todos)
-            });
-          });
-
-          return foundItems;
-        }
+        resolve: (root, { id }) => db.User.find({ where: { id } })
+          .then(result => [result.dataValues])
+          .catch(err => console.error(err))
       }
     }
   })
 });
 
-export default {
-  schema,
-  getProjection
-};
+export default schema;

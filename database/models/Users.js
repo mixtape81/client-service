@@ -7,11 +7,11 @@ const UserSchema = {
     autoIncrement: true
   },
   joinDate: Sequelize.DATE,
-  birthDate: Sequelize.DATE,
-  location: Sequelize.STRING,
+  age: Sequelize.INTEGER,
   paidStatus: Sequelize.BOOLEAN,
   genreGroup: Sequelize.INTEGER,
-  favoriteArtists: Sequelize.ARRAY(Sequelize.INTEGER)
+  favoriteArtists: Sequelize.ARRAY(Sequelize.INTEGER),
+  favoriteGenres: Sequelize.ARRAY(Sequelize.INTEGER)
 };
 
 module.exports = UserSchema;

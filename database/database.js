@@ -15,15 +15,23 @@ const db = new Sequelize({
 db.authenticate()
   .catch(err => console.error('Problem with Postgres: ', err));
 
-const UserSchema = require('./models/Users.js');
+const LocationSchema = require('./models/Locations');
+const UserSchema = require('./models/Users');
 
+const Location = db.define('location', LocationSchema);
 const User = db.define('user', UserSchema);
+
+Location.hasMany(User);
+User.belongsTo(Location);
+
 if (process.env.NODE_ENV !== 'test') {
-  User.sync()
+  Location.sync()
+    .then(() => User.sync())
     .catch(err => console.error('Error syncing users: ', err));
 }
 
 module.exports = {
   db,
+  Location,
   User
 };
