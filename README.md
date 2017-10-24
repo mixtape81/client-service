@@ -86,9 +86,9 @@ The user information is stored in a PostgresQL database. Refer to the table belo
 #### How GraphQL returns data
 This service handles HTTP requests via [GraphQL](http://graphql.org/) endpoints. GraphQL allows the querying of the user database and will return only requested information for all users. For example, take a look at the following cURL command:
 ```
-curl -X POST -H 'Content-Type:application/graphql' -d '{users {age,favoriteGenres,location {name}}}' 'localhost:3000/graphql'
+curl -X POST -H 'Content-Type:application/graphql' -d '{users {favoriteGenres,age,location {name}}}' 'localhost:3000/graphql'
 ```
-The command will return a JSON object, with "users" being an array with the age, favorite genres, and location for each user in the database. For example, the command would return the following if the users table looked like the example above:
+The command will return a JSON object, with "users" being an array with the favorite genres, age, and location for each user in the database. For example, the command would return the following if the users table looked like the example above:
 ```javascript
 {
   "data": {
