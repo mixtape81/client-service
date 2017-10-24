@@ -11,12 +11,6 @@ import GraphQLDate from 'graphql-date';
 
 import db from '../database/database';
 
-/**
- * generate projection object for mongoose
- * @param  {Object} fieldASTs
- * @return {Project}
- */
-
 const locationType = new GraphQLObjectType({
   name: 'location',
   description: 'user\'s location',
@@ -75,16 +69,10 @@ const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-      user: {
+      users: {
         type: new GraphQLList(userType),
-        args: {
-          id: {
-            name: 'id',
-            type: (GraphQLInt)
-          }
-        },
-        resolve: (root, { id }) => db.User.find({ where: { id } })
-          .then(result => [result.dataValues])
+        resolve: () => db.User.findAll()
+          .then(results => results)
           .catch(err => console.error(err))
       }
     }
