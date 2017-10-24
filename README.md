@@ -44,10 +44,10 @@ Development Dependencies:
 
 ## Development
 ### NPM Package Manager (Package Manager Package Manager Package Manager...)
-The repository is configured to work with the *node_modules* directory created by [NPM] (https://www.npmjs.com/) package manager. If using another package manager, you will need to refer to official documentation for packages for proper configuration.
+The repository is configured to work with the *node_modules* directory created by [NPM](https://www.npmjs.com/) package manager. If using another package manager, you will need to refer to official documentation for packages for proper configuration.
 
 ### Airbnb Style Guide
-This project adheres to the [Airbnb style guide] (https://github.com/airbnb/javascript), and uses the official [NPM package] (https://www.npmjs.com/package/eslint-config-airbnb) for managing linting rules.
+This project adheres to the [Airbnb style guide](https://github.com/airbnb/javascript), and uses the official [NPM package](https://www.npmjs.com/package/eslint-config-airbnb) for managing linting rules.
 
 Ensure that the *.eslintrc.js* file in the root directory contains the following rule exceptions:
 ```javascript
@@ -67,21 +67,21 @@ The `no-extraneous-dependencies` rule is specifically ignored for unit test file
 
 ### PostgresQL Database
 The user information is stored in a PostgresQL database. Refer to the table below for guidance on the users table schema:
- id | joinDate | age | paidStatus | genreGroup | favoriteArtists | favoriteGenres | locationId
- --- | --- | --- | --- | --- | --- | --- | ---
- 1 | 2017-10-10 14:47:20.872-07 | 25 | true | 3 | [4, 2, 6, 8] | [1, 67, 21, 2] | 1
+| id | joinDate | age | paidStatus | genreGroup | favoriteArtists | favoriteGenres | locationId |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 2017-10-10 14:47:20.872-07 | 25 | true | 3 | [4, 2, 6, 8] | [1, 67, 21, 2] | 1 |
 - **Age** is the age of the user between 18 - 70
 - **paidStatus** is true if the user pays for the service, false if otherwise
-- **genreGroup** is an array of the user's favorite genres by ID (reference the [music-inventory] (https://github.com/mixtape81/music-inventory) repository for details)
-- **favoriteArtists** is an array of the user's favorite artists by ID (reference the [music-inventory] (https://github.com/mixtape81/music-inventory) repository for details)
+- **genreGroup** is an array of the user's favorite genres by ID (reference the [music-inventory](https://github.com/mixtape81/music-inventory) repository for details)
+- **favoriteArtists** is an array of the user's favorite artists by ID (reference the [music-inventory](https://github.com/mixtape81/music-inventory) repository for details)
 - **locationId** refers to the user's location by id, which is relational to the *locations* table schema below:
-id | name
---- | ---
-1 | San Francisco
+| id | name |
+| --- | --- |
+| 1 | San Francisco |
 
 ### GraphQL API
 #### How GraphQL returns data
-This service handles HTTP requests via [GraphQL] (http://graphql.org/) endpoints. GraphQL allows the querying of the user database and will return only requested information for all users. For example, take a look at the following cURL command:
+This service handles HTTP requests via [GraphQL](http://graphql.org/) endpoints. GraphQL allows the querying of the user database and will return only requested information for all users. For example, take a look at the following cURL command:
 ```
 curl -X POST -H 'Content-Type:application/graphql' -d '{users {age,favoriteGenres,location {name}}}' 'localhost:3000/graphql'
 ```
