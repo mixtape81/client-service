@@ -92,10 +92,11 @@ describe('GraphQL queries', () => {
 
   it('Should return only specified parameters', (done) => {
     request
-      .post('/graphql?query={users{id}}')
+      .post('/graphql?query={users{id,age}}')
       .then((results) => {
         expect(results.body.data.users[0].id).to.equal(1);
-        expect(results.body.data.users[0].age).to.not.exist;
+        expect(results.body.data.users[0].age).to.equal(25);
+        expect(results.body.data.users[0].location).to.not.exist;
         done();
       });
   });
