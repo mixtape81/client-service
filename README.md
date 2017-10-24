@@ -1,6 +1,7 @@
-# Project Name
+# Mixtape
+## Client Service
 
-The project description
+Mixtape looks to track the performance of music playlists overtime. The client service is responsible for storing user details, as well as serving playlists to frontend requests as quickly and efficiently as possible.
 
 ## Roadmap
 
@@ -20,16 +21,16 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## Usage
 
-> Some usage instructions
+For development:
+- npm start: start node server using *nodemon*
+- npm test: run mocha tests for server
 
 ## Requirements
-
-- Node 6.9.x
-- Redis 3.2.x
-- Postgresql 9.6.x
-- etc
+- Express 4.16.2
+- Express-GraphQL 0.6.11
+- GraphQL 0.11.7
+- Mongoose 4.12.3
+- Node 8.3.0
 
 ## Other Information
-
-(TODO: fill this out with details about your project. Suggested ideas: architecture diagram, schema, and any other details from your app plan that sound interesting.)
-
+The service API will be served via GraphQL querying.
