@@ -3,7 +3,8 @@ import supertest from 'supertest';
 import { expect } from 'chai';
 import app from '../server/app';
 import db from '../database/database';
-import addLocations from '../data/locations';
+import createLocations from '../data/locations';
+import createUsers from '../data/users';
 
 const request = supertest.agent(app);
 const port = 7357;
@@ -105,9 +106,9 @@ describe('GraphQL queries', () => {
 
 describe('Data Scripting', () => {
   it('Should post 20 cities', (done) => {
-    addLocations()
-      .then((results) => {
-        expect(results).to.have.lengthOf(20);
+    createLocations()
+      .then((cities) => {
+        expect(cities).to.have.lengthOf(20);
         done();
       });
   });
@@ -135,7 +136,7 @@ describe('Data Scripting', () => {
       'Denver',
       'El Paso'
     ];
-    addLocations()
+    createLocations()
       .then(cities => cities.forEach(city =>
         expect(city.name).to.equal(expectCities[city.id - 1])))
       .then(() => done());
