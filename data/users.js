@@ -48,7 +48,7 @@ const generatePaidStatus = () => {
 
 const generateFavoriteArtists = () => {
   const favoriteArtists = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i += 1) {
     favoriteArtists.push(Math.ceil(Math.random() * 1000));
   }
   return favoriteArtists;
@@ -56,7 +56,7 @@ const generateFavoriteArtists = () => {
 
 const generateFavoriteGenres = () => {
   const favoriteGenres = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i += 1) {
     favoriteGenres.push(Math.ceil(Math.random() * 1000));
   }
   return favoriteGenres;
@@ -81,4 +81,4 @@ const createUser = (count) => {
     .catch(err => console.error(err));
 };
 
-createUser(0);
+export default createUser;

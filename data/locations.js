@@ -27,6 +27,6 @@ export default () => {
   const promiseArray = cities.map(city => () =>
     db.Location.create({ name: city }));
 
-  return promiseArray.reduce((promise, create) => promise.then(result =>
-    create().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
+  return promiseArray.reduce((create, promise) => create.then(result =>
+    promise().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
 };
