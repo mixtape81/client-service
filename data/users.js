@@ -1,7 +1,5 @@
 import db from '../database/database';
 
-let count = 0;
-
 const chanceGenerator = () => Math.floor(Math.random() * 101);
 
 const generateLocationId = () => {
@@ -64,8 +62,7 @@ const generateFavoriteGenres = () => {
   return favoriteGenres;
 };
 
-const createUser = () => {
-  count++;
+const createUser = (count) => {
   const options = {};
   options.locationId = generateLocationId();
   options.age = generateAge();
@@ -78,10 +75,10 @@ const createUser = () => {
   return db.User.create(options)
     .then(() => {
       if (count < 1000) {
-        createUser();
+        createUser(count + 1);
       }
     })
     .catch(err => console.error(err));
 };
 
-createUser();
+createUser(0);
