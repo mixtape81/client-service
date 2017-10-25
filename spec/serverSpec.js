@@ -3,6 +3,7 @@ import supertest from 'supertest';
 import { expect } from 'chai';
 import app from '../server/app';
 import db from '../database/database';
+import addLocations from '../data/locations';
 
 const request = supertest.agent(app);
 const port = 7357;
@@ -97,6 +98,16 @@ describe('GraphQL queries', () => {
         expect(results.body.data.users[0].id).to.equal(1);
         expect(results.body.data.users[0].age).to.equal(25);
         expect(results.body.data.users[0].location).to.not.exist;
+        done();
+      });
+  });
+});
+
+describe('Data Scripting', () => {
+  it('Should post locations in correct order', (done) => {
+    addLocations()
+      .then((results) => {
+        expect(results).to.have.lengthOf(20);
         done();
       });
   });
