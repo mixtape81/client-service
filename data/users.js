@@ -48,37 +48,48 @@ const generatePaidStatus = () => {
 
 const generateFavoriteArtists = () => {
   const favoriteArtists = [];
-  for (let i = 0; i < 5; i += 1) {
-    favoriteArtists.push(Math.ceil(Math.random() * 1000));
+  const artistStorage = {};
+  while (Object.keys(artistStorage).length < 5) {
+    const randomId = Math.ceil(Math.random() * 500000);
+    if (!artistStorage[randomId]) {
+      favoriteArtists.push(randomId);
+      artistStorage[randomId] = true;
+    }
   }
   return favoriteArtists;
 };
 
 const generateFavoriteGenres = () => {
   const favoriteGenres = [];
-  for (let i = 0; i < 5; i += 1) {
-    favoriteGenres.push(Math.ceil(Math.random() * 1000));
+  const genreStorage = { 7: true };
+  while (Object.keys(genreStorage).length < 5) {
+    const randomId = Math.ceil(Math.random() * 10);
+    if (!genreStorage[randomId]) {
+      favoriteGenres.push(randomId);
+      genreStorage[randomId] = true;
+    }
   }
   return favoriteGenres;
 };
 
-const createUser = (count) => {
+const generateUserOptions = () => {
   const options = {};
   options.locationId = generateLocationId();
   options.age = generateAge();
-  options.joinDate = generateJoinDate(new Date(2014, 0, 1), new Date(2017, 5, 1));
+  options.createdAt =
+    generateJoinDate(new Date(2014, 0, 1), new Date(2017, 5, 1));
   options.paidStatus = generatePaidStatus();
-  options.genreGroup = Math.ceil(Math.random() * 9);
   options.favoriteArtists = generateFavoriteArtists();
   options.favoriteGenres = generateFavoriteGenres();
-
-  return db.User.create(options)
-    .then(() => {
-      if (count < 1000) {
-        createUser(count + 1);
-      }
-    })
-    .catch(err => console.error(err));
+  [options.genreGroup] = options.favoriteGenres;
+  return options;
 };
 
-export default createUser;
+export default () => {
+  const promiseArray = [];
+  for (let i = 0; i < 1000; i += 1) {
+    promiseArray.push(db.User.create(generateUserOptions()));
+  }
+
+  return Promise.all(promiseArray);
+};
