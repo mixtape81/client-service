@@ -104,10 +104,19 @@ describe('GraphQL queries', () => {
 });
 
 describe('Data Scripting', () => {
-  it('Should post locations in correct order', (done) => {
+  it('Should post 20 cities', (done) => {
     addLocations()
       .then((results) => {
         expect(results).to.have.lengthOf(20);
+        done();
+      });
+  });
+
+  it('Should post cities in correct order', (done) => {
+    addLocations()
+      .then(() => db.Location.findById(17))
+      .then((city) => {
+        expect(city.dataValues.name).to.equal('Charlotte');
         done();
       });
   });
