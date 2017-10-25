@@ -112,12 +112,32 @@ describe('Data Scripting', () => {
       });
   });
 
-  it('Should post cities in correct order', (done) => {
+  it('Should post cities with correct IDs', (done) => {
+    const expectCities = [
+      'New York City',
+      'Los Angeles',
+      'Chicago',
+      'Houston',
+      'Philadelphia',
+      'Phoenix',
+      'San Antonio',
+      'San Diego',
+      'Dallas',
+      'San Jose',
+      'Austin',
+      'Jacksonville',
+      'San Francisco',
+      'Indianapolis',
+      'Columbus',
+      'Fort Worth',
+      'Charlotte',
+      'Seattle',
+      'Denver',
+      'El Paso'
+    ];
     addLocations()
-      .then(() => db.Location.findById(17))
-      .then((city) => {
-        expect(city.dataValues.name).to.equal('Charlotte');
-        done();
-      });
+      .then(cities => cities.forEach(city =>
+        expect(city.name).to.equal(expectCities[city.id - 1])))
+      .then(() => done());
   });
 });
