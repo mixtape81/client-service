@@ -6,7 +6,6 @@ const UserSchema = {
     primaryKey: true,
     autoIncrement: true
   },
-  joinDate: Sequelize.DATE,
   age: Sequelize.INTEGER,
   paidStatus: Sequelize.BOOLEAN,
   genreGroup: Sequelize.INTEGER,

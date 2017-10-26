@@ -2,7 +2,6 @@
 
 import {
   GraphQLObjectType,
-  GraphQLNonNull,
   GraphQLSchema,
   GraphQLString,
   GraphQLList,
@@ -36,7 +35,7 @@ const userType = new GraphQLObjectType({
       type: (GraphQLInt),
       description: 'A user\'s ID'
     },
-    joinDate: {
+    createdAt: {
       type: (GraphQLDate),
       description: 'A user\'s join date'
     },

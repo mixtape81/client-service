@@ -34,7 +34,8 @@
     "babel-node": "babel-node --ignore='/node_modules/'",
     "start": "nodemon --exec npm run babel-node -- ./server/server.js",
     "test": "NODE_ENV=test mocha --require babel-register --reporter nyan --recursive ./spec/ --exit",
-    "flow": "flow"
+    "flow": "flow",
+    "data": "npm run babel-node -- ./data/scriptRunner.js"
   },
   "repository": {
     "type": "git",
