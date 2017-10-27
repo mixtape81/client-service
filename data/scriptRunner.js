@@ -9,5 +9,5 @@ const createUserBatches = (number, count = 0) => {
     createUserBatches(number, count)) : null;
 };
 
-createLocations().then(() => createUserBatches(Math.ceil(9305064 / 1000)))
+createLocations().then(() => createUserBatches(1))
   .catch(err => console.error(err));
