@@ -1,3 +1,5 @@
+/* eslint no-param-reassign: 0 */
+
 import createLocations from './locations';
 import createUsers from './users';
 import db from '../database/database';

@@ -45,6 +45,7 @@ const testPost = () => {
     .then(() => db.User.create(user))
     .catch(err => console.error(err));
 };
+
 describe('', function () {
   beforeEach(function (done) {
     server = app.listen(port);
@@ -124,7 +125,7 @@ describe('', function () {
 });
 
 describe('Data Scripting', function () {
-  this.timeout(5000);
+  this.timeout(60000);
   before(function (done) {
     db.User.drop()
       .then(() => db.Location.drop())
