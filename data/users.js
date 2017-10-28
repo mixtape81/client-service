@@ -72,12 +72,23 @@ const generateFavoriteGenres = () => {
   return favoriteGenres;
 };
 
+const yyyymmdd = (date) => {
+  const mm = date.getMonth() + 1; // getMonth() is zero-based
+  const dd = date.getDate();
+
+  return [date.getFullYear(),
+    (mm > 9 ? '' : '0') + mm,
+    (dd > 9 ? '' : '0') + dd
+  ].join('');
+};
+
 const generateUserOptions = () => {
   const options = {};
   options.locationId = generateLocationId();
   options.age = generateAge();
   options.createdAt =
     generateJoinDate(new Date(2014, 0, 1), new Date(2017, 5, 1));
+  options.joinDate = yyyymmdd(options.createdAt);
   options.paidStatus = generatePaidStatus();
   options.favoriteArtists = generateFavoriteArtists();
   options.favoriteGenres = generateFavoriteGenres();

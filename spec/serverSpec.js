@@ -16,12 +16,22 @@ let server;
 let cities;
 let users;
 
+const yyyymmdd = (date) => {
+  const mm = date.getMonth() + 1; // getMonth() is zero-based
+  const dd = date.getDate();
+
+  return [date.getFullYear(),
+    (mm > 9 ? '' : '0') + mm,
+    (dd > 9 ? '' : '0') + dd
+  ].join('');
+};
+
 const testPost = () => {
   const location = {
     name: 'San Francisco'
   };
   const user = {
-    joinDate: new Date(),
+    joinDate: yyyymmdd(new Date()),
     age: 25,
     paidStatus: true,
     genreGroup: 3,
@@ -199,6 +209,7 @@ describe('Data Scripting', function () {
       expect(user.age).to.be.below(91);
       expect(user.createdAt).to.be.above(new Date(2014, 0, 1));
       expect(user.createdAt).to.be.below(new Date(2017, 5, 1));
+      expect(user.joinDate).to.equal(yyyymmdd(user.createdAt));
       expect(typeof user.paidStatus).to.equal('boolean');
       expect(Array.isArray(users[0].favoriteArtists)).to.equal(true);
       expect(Array.isArray(users[0].favoriteGenres)).to.equal(true);

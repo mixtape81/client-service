@@ -10,7 +10,8 @@ const UserSchema = {
   paidStatus: Sequelize.BOOLEAN,
   genreGroup: Sequelize.INTEGER,
   favoriteArtists: Sequelize.ARRAY(Sequelize.INTEGER),
-  favoriteGenres: Sequelize.ARRAY(Sequelize.INTEGER)
+  favoriteGenres: Sequelize.ARRAY(Sequelize.INTEGER),
+  joinDate: Sequelize.STRING
 };
 
 export default UserSchema;
