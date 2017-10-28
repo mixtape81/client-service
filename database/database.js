@@ -17,8 +17,8 @@ const db = new Sequelize({
 db.authenticate()
   .catch(err => console.error('Problem with Postgres: ', err));
 
-const Location = db.define('location', LocationSchema);
-const User = db.define('user', UserSchema);
+const Location = db.define('location', LocationSchema, { timestamps: false });
+const User = db.define('user', UserSchema, { timestamps: false });
 
 Location.hasMany(User);
 User.belongsTo(Location);

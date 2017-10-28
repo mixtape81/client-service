@@ -1,4 +1,4 @@
-import db from '../database/database';
+import fs from 'fs';
 
 const chanceGenerator = () => Math.floor(Math.random() * 101);
 
@@ -82,25 +82,33 @@ const yyyymmdd = (date) => {
   ].join('');
 };
 
-const generateUserOptions = () => {
-  const options = {};
-  options.locationId = generateLocationId();
-  options.age = generateAge();
-  options.createdAt =
-    generateJoinDate(new Date(2014, 0, 1), new Date(2017, 5, 1));
-  options.joinDate = yyyymmdd(options.createdAt);
-  options.paidStatus = generatePaidStatus();
-  options.favoriteArtists = generateFavoriteArtists();
-  options.favoriteGenres = generateFavoriteGenres();
-  [options.genreGroup] = options.favoriteGenres;
-  return options;
+const formatArray = array =>
+  JSON.stringify(array).replace(/\[/g, '{').replace(/]/g, '}');
+
+const generateUserOptions = (id, batch, filePath) => {
+  const options = [];
+  options.push((1000 * batch) + id);
+  options.push(generateAge());
+  options.push(generatePaidStatus());
+  options.push(formatArray(generateFavoriteArtists()));
+  const favoriteGenres = generateFavoriteGenres();
+  options.push(formatArray(favoriteGenres));
+  options.push(favoriteGenres[0]);
+  options.push(yyyymmdd(generateJoinDate(new Date(2014, 0, 1), new Date(2017, 5, 1))));
+  options.push(generateLocationId());
+  return new Promise((resolve) => {
+    fs.appendFile(filePath, `${options.join(';')}\n`, result =>
+      resolve(result));
+  });
 };
 
-export default () => {
+export default (batch, filePath, cb) => {
   const promiseArray = [];
-  for (let i = 0; i < 1000; i += 1) {
-    promiseArray.push(db.User.create(generateUserOptions()));
-  }
-
-  return Promise.all(promiseArray);
+  fs.writeFile(filePath, '', (err) => {
+    if (err) throw err;
+    for (let i = 1; i < 1001; i += 1) {
+      promiseArray.push(generateUserOptions(i, batch, filePath));
+    }
+    Promise.all(promiseArray).then(results => cb(results));
+  });
 };

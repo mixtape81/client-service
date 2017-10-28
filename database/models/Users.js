@@ -8,9 +8,9 @@ const UserSchema = {
   },
   age: Sequelize.INTEGER,
   paidStatus: Sequelize.BOOLEAN,
-  genreGroup: Sequelize.INTEGER,
   favoriteArtists: Sequelize.ARRAY(Sequelize.INTEGER),
   favoriteGenres: Sequelize.ARRAY(Sequelize.INTEGER),
+  genreGroup: Sequelize.INTEGER,
   joinDate: Sequelize.STRING
 };
 

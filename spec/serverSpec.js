@@ -11,6 +11,7 @@ import createUsers from '../data/users';
 
 const request = supertest.agent(app);
 const port = 7357;
+const filePath = '/var/lib/postgres/data/users.csv';
 
 let server;
 let cities;
@@ -133,11 +134,10 @@ describe('Data Scripting', function () {
       .then((results) => {
         cities = results;
       })
-      .then(() => createUsers())
-      .then((results) => {
-        users = results;
-      })
-      .then(() => done());
+      .then(() => createUsers(0, filePath, () => {
+        db.db.query(`COPY users FROM '${filePath}' DELIMITER ';'`)
+          .then(() => done());
+      }));
 
     beforeEach(() => {
       server = app.listen(port);
@@ -185,15 +185,19 @@ describe('Data Scripting', function () {
   });
 
   it('Should create 1000 users', function (done) {
-    expect(users).to.have.lengthOf(1000);
-    done();
+    db.User.findAll()
+      .then((results) => {
+        users = results;
+        expect(users).to.have.lengthOf(1000);
+        done();
+      });
   });
 
   it('Should generate users with correct fields', function (done) {
     expect(users[0].id).to.exist;
     expect(users[0].age).to.exist;
     expect(users[0].locationId).to.exist;
-    expect(users[0].createdAt).to.exist;
+    expect(users[0].joinDate).to.exist;
     expect(users[0].paidStatus).to.exist;
     expect(users[0].favoriteArtists).to.exist;
     expect(users[0].favoriteGenres).to.exist;
@@ -207,12 +211,10 @@ describe('Data Scripting', function () {
       expect(user.locationId).to.be.below(21);
       expect(user.age).to.be.above(17);
       expect(user.age).to.be.below(91);
-      expect(user.createdAt).to.be.above(new Date(2014, 0, 1));
-      expect(user.createdAt).to.be.below(new Date(2017, 5, 1));
-      expect(user.joinDate).to.equal(yyyymmdd(user.createdAt));
       expect(typeof user.paidStatus).to.equal('boolean');
-      expect(Array.isArray(users[0].favoriteArtists)).to.equal(true);
-      expect(Array.isArray(users[0].favoriteGenres)).to.equal(true);
+      expect(user.joinDate).to.have.lengthOf(8);
+      expect(Array.isArray(user.favoriteArtists)).to.equal(true);
+      expect(Array.isArray(user.favoriteGenres)).to.equal(true);
       expect(user.genreGroup).to.equal(user.favoriteGenres[0]);
     });
     done();
