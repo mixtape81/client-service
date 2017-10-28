@@ -44,6 +44,7 @@ const testPost = () => {
     .then(() => db.User.create(user))
     .catch(err => console.error(err));
 };
+
 describe('', function () {
   beforeEach(function (done) {
     server = app.listen(port);
@@ -123,7 +124,7 @@ describe('', function () {
 });
 
 describe('Data Scripting', function () {
-  this.timeout(5000);
+  this.timeout(60000);
   before(function (done) {
     db.User.drop()
       .then(() => db.Location.drop())
@@ -134,6 +135,7 @@ describe('Data Scripting', function () {
         cities = results;
       })
       .then(() => createUsers())
+      .then(() => db.User.findAll())
       .then((results) => {
         users = results;
       })
@@ -185,7 +187,7 @@ describe('Data Scripting', function () {
   });
 
   it('Should create 1000 users', function (done) {
-    expect(users).to.have.lengthOf(1000);
+    expect(users).to.have.lengthOf(5000);
     done();
   });
 
