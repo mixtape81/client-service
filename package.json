@@ -10,7 +10,7 @@
     "graphql-date": "^1.0.3",
     "node": "^8.3.0",
     "pg": "^7.3.0",
-    "sequelize": "^4.15.1"
+    "sequelize": "^4.19.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -35,8 +35,7 @@
     "start": "nodemon --exec npm run babel-node -- ./server/server.js",
     "test": "NODE_ENV=test mocha --require babel-register --reporter nyan --recursive ./spec/ --exit",
     "flow": "flow",
-    "data": "npm run babel-node -- ./data/scriptRunner.js",
-    "json": "npm run babel-node -- ./data/jsonWriter.js"
+    "data": "npm run babel-node -- ./data/scriptRunner.js"
   },
   "repository": {
     "type": "git",
