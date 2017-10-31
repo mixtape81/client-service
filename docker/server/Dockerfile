@@ -1,8 +1,11 @@
 FROM node:8
 
-WORKDIR /server
+WORKDIR /app
 
-ADD . /server
+ADD server ./server
+
+COPY package.json package-lock.json ./
+COPY .babelrc ./
 
 RUN npm install
 
