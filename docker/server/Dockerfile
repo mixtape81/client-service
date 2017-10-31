@@ -1,12 +1,10 @@
 FROM node:8
 
-WORKDIR /app
+WORKDIR /server
 
-COPY package.json package-lock.json ./
+ADD . /server
 
 RUN npm install
-
-COPY . .
 
 EXPOSE 3000
 CMD [ "npm", "start" ]
