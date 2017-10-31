@@ -11,7 +11,7 @@ import createUsers from '../data/users';
 
 const request = supertest.agent(app);
 const port = 7357;
-const filePath = '/var/lib/postgres/data/users.csv';
+const filePath = '/psqltmp/users.csv';
 
 let server;
 let cities;
