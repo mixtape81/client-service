@@ -3,6 +3,7 @@ FROM node:8
 WORKDIR /app
 
 ADD server ./server
+ADD database ./database
 
 COPY package.json package-lock.json ./
 COPY .babelrc ./
