@@ -8,7 +8,6 @@ import {
   GraphQLInt,
   GraphQLBoolean
 } from 'graphql/type';
-import GraphQLDate from 'graphql-date';
 
 import db from '../../database/database';
 
@@ -28,15 +27,15 @@ const locationType = new GraphQLObjectType({
 });
 
 const userType = new GraphQLObjectType({
-  name: 'user',
+  name: 'users',
   description: 'service user',
   fields: () => ({
     id: {
       type: (GraphQLInt),
       description: 'A user\'s ID'
     },
-    createdAt: {
-      type: (GraphQLDate),
+    joinDate: {
+      type: (GraphQLString),
       description: 'A user\'s join date'
     },
     age: {
@@ -72,9 +71,60 @@ const schema = new GraphQLSchema({
     fields: {
       users: {
         type: new GraphQLList(userType),
-        resolve: () => db.User.findAll()
-          .then(results => results)
-          .catch(err => console.error(err))
+        args: {
+          id: {
+            name: 'id',
+            description: 'a unique integer representing one user',
+            type: GraphQLInt
+          },
+          paidStatus: {
+            name: 'paidStatus',
+            description: 'a boolean indicating whether or not a user pays for the service',
+            type: GraphQLBoolean
+          },
+          genreGroup: {
+            name: 'genreGroup',
+            description: 'an integer representing a user\'s genre group cluster',
+            type: GraphQLInt
+          },
+          joinDate: {
+            name: 'joinDate',
+            description: 'user\'s join date in the format YYYYMMDD',
+            type: GraphQLString
+          },
+          locationId: {
+            name: 'locationId',
+            description: 'a unique integer representing a city',
+            type: GraphQLInt
+          },
+          age: {
+            name: 'age',
+            description: 'an integer between 18 - 90 (inclusive) representing a user\'s age',
+            type: GraphQLInt
+          },
+          favoriteGenres: {
+            name: 'favoriteGenres',
+            description: 'an array of unique integers representing artists',
+            type: new GraphQLList(GraphQLInt)
+          },
+          favoriteArtists: {
+            name: 'favoriteGenres',
+            description: 'an array of unique integers representing genres',
+            type: new GraphQLList(GraphQLInt)
+          }
+        },
+        resolve: (root, args) => {
+          const options = Object.assign({}, args);
+          if (options.favoriteGenres) {
+            options.favoriteGenres = { $contains: options.favoriteGenres };
+          }
+          if (options.favoriteArtists) {
+            options.favoriteArtists = { $contains: options.favoriteArtists };
+          }
+          return db.User.findAll({ where: options, raw: true })
+            .then(results => results)
+            .catch(err => console.error(err));
+        }
       }
     }
   })
