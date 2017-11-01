@@ -4,7 +4,7 @@ services:
     # replace username/repo:tag with your name and image details
     image: slaymance/mixtape-client:service
     deploy:
-      replicas: 5
+      replicas: 1
       restart_policy:
         condition: on-failure
       resources:
