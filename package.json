@@ -4,6 +4,7 @@
   "description": "Client service for mixtape",
   "main": ".eslintrc.js",
   "dependencies": {
+    "aws-sdk": "^2.142.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-preset-airbnb": "^2.4.0",
@@ -13,7 +14,6 @@
     "express": "^4.16.2",
     "express-graphql": "^0.6.11",
     "graphql": "^0.11.7",
-    "graphql-date": "^1.0.3",
     "node": "^8.3.0",
     "pg": "^7.3.0",
     "sequelize": "^4.19.0"
