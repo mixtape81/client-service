@@ -1,13 +1,16 @@
 import AWS from 'aws-sdk';
 
-AWS.config.loadFromPath('./credentials/AWS.config.json');
+export default (queueUrl, message) => {
+  AWS.config.loadFromPath('./credentials/AWS.config.json');
 
+  const sqs = new AWS.SQS({});
+  const params = {
+    MessageBody: message,
+    QueueUrl: queueUrl
+  };
 
-const sqs = new AWS.SQS({});
-const params = {
-  MessageBody: 'Hello world!',
-  QueueUrl: 'https://sqs.us-east-2.amazonaws.com/565396038887/Mixtape'
+  return new Promise((resolve, reject) => {
+    sqs.sendMessage(params, (err, data) =>
+      (err ? reject(err) : resolve(data.MessageId)));
+  });
 };
-
-sqs.sendMessage(params, (err, data) =>
-  (err ? console.error(err) : console.log('Success!', data.MessageId)));

@@ -1,34 +1,36 @@
 import AWS from 'aws-sdk';
 
-AWS.config.loadFromPath('./credentials/AWS.config.json');
 
-// Create SQS service object
-const sqs = new AWS.SQS({});
-const queueUrl = 'https://sqs.us-east-2.amazonaws.com/565396038887/Mixtape';
+export default (queueUrl) => {
+  AWS.config.loadFromPath('./credentials/AWS.config.json');
 
-const params = {
-  AttributeNames: [
-    'SentTimestamp'
-  ],
-  MaxNumberOfMessages: 1,
-  MessageAttributeNames: [
-    'All'
-  ],
-  QueueUrl: queueUrl,
-  VisibilityTimeout: 0,
-  WaitTimeSeconds: 0
+  const sqs = new AWS.SQS({});
+
+  const params = {
+    AttributeNames: [
+      'SentTimestamp'
+    ],
+    MaxNumberOfMessages: 1,
+    MessageAttributeNames: [
+      'All'
+    ],
+    QueueUrl: queueUrl,
+    VisibilityTimeout: 0,
+    WaitTimeSeconds: 0
+  };
+
+  return new Promise((resolve, reject) => {
+    sqs.receiveMessage(params, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        const deleteParams = {
+          QueueUrl: queueUrl,
+          ReceiptHandle: data.Messages[0].ReceiptHandle
+        };
+        sqs.deleteMessage(deleteParams, error =>
+          (err ? reject(error) : resolve(data)));
+      }
+    });
+  });
 };
-
-sqs.receiveMessage(params, (err, data) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log(data);
-    const deleteParams = {
-      QueueUrl: queueUrl,
-      ReceiptHandle: data.Messages[0].ReceiptHandle
-    };
-    sqs.deleteMessage(deleteParams, (error, delData) =>
-      (err ? console.error(error) : console.log('Message Deleted', delData)));
-  }
-});
