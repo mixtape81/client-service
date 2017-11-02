@@ -11,6 +11,18 @@ import {
 
 import db from '../../database/database';
 
+/* GraphQL schemas are defined as ObjectTypes, as seen by the locationType and
+ * userType variables below. Since I'm querying a Postgres database, the fields
+ * should match the column names of my tables. This makes it easy for the
+ * resolve method in the GraphQLSchema instance to map values returned by the
+ * database query to what was requested by the user. Each field has a type,
+ * which indicates the type of value that will be returned by the query, as
+ * well as an optional description. Note that a request may specify any number
+ * of these fields, and will receive only those which were requested. Also note
+ * that the location field for userType is a resolve method which uses the
+ * loader from app.js in the server directory. This returns the name of the
+ * location based on the relational integer stored for the user.
+ */
 const locationType = new GraphQLObjectType({
   name: 'location',
   description: 'user\'s location',
@@ -32,7 +44,7 @@ const userType = new GraphQLObjectType({
   fields: () => ({
     id: {
       type: (GraphQLInt),
-      description: 'A user\'s ID'
+      description: 'A user\'s unique id'
     },
     joinDate: {
       type: (GraphQLString),
@@ -66,6 +78,17 @@ const userType = new GraphQLObjectType({
   })
 });
 
+/* The GraphQLSchema class defines the way in which a user may structure a
+ * query through the GraphQL API. 'users' is the main field of query, which has
+ * a type of 'userType' defined above. The type is defined as a list, meaning
+ * that a query can be made for many users at once. 'args' defines the various
+ * arguments that may be passed into the query, and sepcifies the value type
+ * each argument must be. If an argument is passed that doesn't match the type
+ * identified, the query will not be performed, and all arguments are optional.
+ * Finally, schema is resolved through a Postgres query based on the arguments
+ * passed in by the request. The results from the query are then mapped to the
+ * 'userType' and the finish the request.
+ */
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
@@ -75,8 +98,8 @@ const schema = new GraphQLSchema({
         args: {
           id: {
             name: 'id',
-            description: 'a unique integer representing one user',
-            type: GraphQLInt
+            description: 'Accepts an array of unique integers which represent a user\'s ID. If one integer is passed, the user with that ID will be returned. If two integers are passed, users with IDs within the range of the two integers (inclusive) will be returned. If more than two integers are passed, users with IDs between the first and last integers will be returned.',
+            type: new GraphQLList(GraphQLInt)
           },
           paidStatus: {
             name: 'paidStatus',
@@ -100,8 +123,8 @@ const schema = new GraphQLSchema({
           },
           age: {
             name: 'age',
-            description: 'an integer between 18 - 90 (inclusive) representing a user\'s age',
-            type: GraphQLInt
+            description: 'Accepts an array of integers which represent a user\'s age. If one integer is passed, users with that age will be returned. If two integers are passed, users with ages within the range of the two integers (inclusive) will be returned. If more than two integers are passed, users with ages between the first and last integers will be returned.',
+            type: new GraphQLList(GraphQLInt)
           },
           favoriteGenres: {
             name: 'favoriteGenres',
@@ -116,6 +139,14 @@ const schema = new GraphQLSchema({
         },
         resolve: (root, args) => {
           const options = Object.assign({}, args);
+          if (options.id) {
+            options.id =
+              { $between: [options.id[0], options.id[options.id.length - 1]] };
+          }
+          if (options.age) {
+            options.age =
+              { $between: [options.age[0], options.age[options.age.length - 1]] };
+          }
           if (options.favoriteGenres) {
             options.favoriteGenres = { $contains: options.favoriteGenres };
           }
