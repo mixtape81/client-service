@@ -36,8 +36,8 @@ const testPost = () => {
     age: 25,
     paidStatus: true,
     genreGroup: 3,
-    favoriteArtists: [4, 2, 6, 8],
-    favoriteGenres: [1, 67, 21, 2],
+    favoriteArtists: [74, 46, 102, 8],
+    favoriteGenres: [1, 4, 10, 2],
     locationId: 1
   };
 
@@ -104,7 +104,7 @@ describe('', function () {
 
     it('Should return an array of users', function (done) {
       request
-        .post('/graphql?query={users{id}}')
+        .post('/graphql?query={users(id:[1]){id}}')
         .then((results) => {
           expect(Array.isArray(results.body.data.users)).to.equal(true);
           done();
@@ -113,11 +113,23 @@ describe('', function () {
 
     it('Should return only specified parameters', function (done) {
       request
-        .post('/graphql?query={users{id,age}}')
+        .post('/graphql?query={users(id:[1]){id,age}}')
         .then((results) => {
           expect(results.body.data.users[0].id).to.equal(1);
           expect(results.body.data.users[0].age).to.equal(25);
           expect(results.body.data.users[0].location).to.not.exist;
+          done();
+        });
+    });
+
+    it('Should query array fields', function (done) {
+      request
+        .post('/graphql?query={users(favoriteGenres:[4],favoriteArtists:[8]){id,favoriteGenres,favoriteArtists}}')
+        .then((results) => {
+          expect(results.body.data.users[0].id).to.equal(1);
+          expect(results.body.data.users[0].favoriteGenres).to.have.lengthOf(4);
+          expect(results.body.data.users[0].favoriteArtists)
+            .to.have.lengthOf(4);
           done();
         });
     });
