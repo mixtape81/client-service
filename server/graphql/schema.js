@@ -10,7 +10,7 @@ import {
 } from 'graphql/type';
 import GraphQLDate from 'graphql-date';
 
-import db from '../database/database';
+import db from '../../database/database';
 
 const locationType = new GraphQLObjectType({
   name: 'location',

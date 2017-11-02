@@ -4,6 +4,12 @@
   "description": "Client service for mixtape",
   "main": ".eslintrc.js",
   "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-preset-airbnb": "^2.4.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-register": "^6.26.0",
     "express": "^4.16.2",
     "express-graphql": "^0.6.11",
     "graphql": "^0.11.7",
@@ -13,12 +19,6 @@
     "sequelize": "^4.19.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.0.1",
-    "babel-preset-airbnb": "^2.4.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-flow": "^6.23.0",
-    "babel-register": "^6.26.0",
     "chai": "^4.1.2",
     "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.1.0",
@@ -32,7 +32,8 @@
   },
   "scripts": {
     "babel-node": "babel-node --ignore='/node_modules/'",
-    "start": "nodemon --exec npm run babel-node -- ./server/server.js",
+    "start": "npm run babel-node -- ./server/server.js",
+    "start:dev": "nodemon --exec npm run babel-node -- ./server/server.js",
     "test": "NODE_ENV=test mocha --require babel-register --reporter nyan --recursive ./spec/ --exit",
     "flow": "flow",
     "data": "npm run babel-node -- ./data/scriptRunner.js"
