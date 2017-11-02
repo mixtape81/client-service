@@ -112,4 +112,25 @@ describe('GraphQL queries', function () {
         done();
       });
   });
+
+  it('Should only query ages within a range', function (done) {
+    request
+      .post('/graphql?query={users(age:[18,34]){age}}')
+      .then((results) => {
+        expect(results.body.data.users.map(user =>
+          user.age).reduce((bool, age) =>
+          age >= 18 && age <= 34, false)).to.be.true;
+        done();
+      });
+  });
+
+  it('Should resolve the location name', function (done) {
+    request
+      .post('/graphql?query={users(id:[1]){location{name}}}')
+      .then((results) => {
+        expect(typeof results.body.data.users[0].location.name ===
+          'string').to.be.true;
+        done();
+      });
+  });
 });
