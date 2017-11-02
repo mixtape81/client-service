@@ -4,7 +4,7 @@ import createLocations from './locations';
 import createUsers from './users';
 import db from '../database/database';
 
-const filePath = '/var/lib/postgres/data/users.csv';
+const filePath = '/psqltmp/users.csv';
 const batches = (10000000 / 1000);
 let curBatch = 0;
 
