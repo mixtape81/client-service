@@ -60,7 +60,8 @@ const userType = new GraphQLObjectType({
     },
     location: {
       type: locationType,
-      resolve: user => db.Location.find({ where: { id: user.locationId } })
+      resolve: (user, args, { loaders }) =>
+        loaders.location.load(user.locationId)
     }
   })
 });
