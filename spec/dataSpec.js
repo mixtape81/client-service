@@ -15,7 +15,7 @@ let cities;
 let users;
 
 describe('Data Scripting', function () {
-  this.timeout(60000);
+  this.timeout(6000);
   before(function (done) {
     db.User.drop()
       .then(() => db.Location.drop())

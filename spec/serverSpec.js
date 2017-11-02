@@ -22,25 +22,35 @@ const yyyymmdd = (date) => {
 };
 
 const testPost = () => {
-  const location = {
+  const locations = [{
     name: 'San Francisco'
-  };
-  const user = {
+  }, {
+    name: 'New York City'
+  }];
+  const users = [{
     joinDate: yyyymmdd(new Date()),
     age: 25,
     paidStatus: true,
     genreGroup: 3,
     favoriteArtists: [74, 46, 102, 8],
-    favoriteGenres: [1, 4, 10, 2],
+    favoriteGenres: [3, 4, 10, 2],
     locationId: 1
-  };
+  }, {
+    joinDate: yyyymmdd(new Date()),
+    age: 34,
+    paidStatus: false,
+    genreGroup: 2,
+    favoriteArtists: [500, 271, 10, 46],
+    favoriteGenres: [2, 4, 9, 1],
+    locationId: 2
+  }];
 
-  return db.Location.create(location)
-    .then(() => db.User.create(user))
+  return db.Location.bulkCreate(locations)
+    .then(() => db.User.bulkCreate(users))
     .catch(err => console.error(err));
 };
 
-describe('', function () {
+describe('Basic Server Tests', function () {
   beforeEach(function (done) {
     server = app.listen(port);
     db.User.drop()
@@ -48,13 +58,16 @@ describe('', function () {
       .then(() => db.Location.sync({ force: true }))
       .then(() => db.User.sync({ force: true }))
       .then(() => done());
+  });
 
-    afterEach(() => server.close());
+  afterEach(done => server.close(done));
 
-    after(() => {
-      db.User.drop()
-        .then(() => db.Location.drop());
-    });
+  after((done) => {
+    db.User.drop()
+      .then(() => db.Location.drop())
+      .then(() => db.Location.sync({ force: true }))
+      .then(() => db.User.sync({ force: true }))
+      .then(() => done());
   });
 
   describe('Client Server', function () {
@@ -66,7 +79,7 @@ describe('', function () {
 
     it('Should use GraphQL middleware', function (done) {
       request
-        .get('/graphql?query={users{id}}')
+        .get('/graphql?query={users(id:[1]){id}}')
         .expect(200, done);
     });
   });
@@ -80,51 +93,6 @@ describe('', function () {
               expect(result.id).to.equal(1);
               done();
             });
-        });
-    });
-  });
-
-  describe('GraphQL queries', function () {
-    beforeEach((done) => {
-      testPost()
-        .then(() => done());
-    });
-
-    it('Should return JSON object', function (done) {
-      request
-        .post('/graphql?query={users{id}}')
-        .expect('Content-type', /json/, done);
-    });
-
-    it('Should return an array of users', function (done) {
-      request
-        .post('/graphql?query={users(id:[1]){id}}')
-        .then((results) => {
-          expect(Array.isArray(results.body.data.users)).to.equal(true);
-          done();
-        });
-    });
-
-    it('Should return only specified parameters', function (done) {
-      request
-        .post('/graphql?query={users(id:[1]){id,age}}')
-        .then((results) => {
-          expect(results.body.data.users[0].id).to.equal(1);
-          expect(results.body.data.users[0].age).to.equal(25);
-          expect(results.body.data.users[0].location).to.not.exist;
-          done();
-        });
-    });
-
-    it('Should query array fields', function (done) {
-      request
-        .post('/graphql?query={users(favoriteGenres:[4],favoriteArtists:[8]){id,favoriteGenres,favoriteArtists}}')
-        .then((results) => {
-          expect(results.body.data.users[0].id).to.equal(1);
-          expect(results.body.data.users[0].favoriteGenres).to.have.lengthOf(4);
-          expect(results.body.data.users[0].favoriteArtists)
-            .to.have.lengthOf(4);
-          done();
         });
     });
   });
