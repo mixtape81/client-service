@@ -38,3 +38,4 @@ bower_components/
 
 # Credentials
 credentials/
+server/messageBus/AWS.config.json
