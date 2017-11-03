@@ -1,9 +1,8 @@
 import AWS from 'aws-sdk';
 
+AWS.config.loadFromPath('./credentials/AWS.config.json');
 
 export default () => {
-  AWS.config.loadFromPath('./credentials/AWS.config.json');
-
   const sqs = new AWS.SQS({});
   const params = {};
 

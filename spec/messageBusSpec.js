@@ -8,6 +8,14 @@ let testMessageId;
 const testMessage = 'Hello world!';
 const currentQueues = 2;
 
+const possible =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+let randomQueueName = '';
+for (let i = 0; i < 5; i += 1) {
+  randomQueueName +=
+    possible.charAt(Math.floor(Math.random() * possible.length));
+}
+
 describe('Message Bus', function () {
   it('Should grab all existing queue urls', function (done) {
     MessageBus.storeUrls()
@@ -39,12 +47,10 @@ describe('Message Bus', function () {
   it('Should only receive the top message in the queue', function (done) {
     this.timeout(5000);
     MessageBus.publishMessage('TestQueue', testMessage)
-      .then((thingTwo) => {
-        console.log(thingTwo);
+      .then(() => {
         return MessageBus.publishMessage('TestQueue', 'Testing');
       })
-      .then((thingTwo) => {
-        console.log(thingTwo);
+      .then(() => {
         return MessageBus.consumeMessage('TestQueue');
       })
       .then((resultOne) => {
@@ -97,7 +103,7 @@ describe('Message Bus', function () {
 
   it('Should create a new queue on publish', function (done) {
     this.timeout(5000);
-    MessageBus.publishMessage('NewTestQueue', testMessage)
+    MessageBus.publishMessage(randomQueueName, testMessage)
       .then((result) => {
         expect(result.MessageId).to.exist;
         done();
@@ -111,9 +117,19 @@ describe('Message Bus', function () {
   });
 
   it('Should receive message from the newly created queue', function (done) {
-    MessageBus.consumeMessage('NewTestQueue')
+    MessageBus.consumeMessage(randomQueueName)
       .then((result) => {
         expect(result.Messages[0].Body).to.equal(testMessage);
+        done();
+      });
+  });
+
+  it('Should delete a queue', function (done) {
+    MessageBus.deleteQueue(randomQueueName)
+      .then((result) => {
+        expect(result.ResponseMetadata.RequestId).to.exist;
+        expect(Object.keys(MessageBus.queueUrls))
+          .to.have.lengthOf(currentQueues);
         done();
       });
   });

@@ -3,6 +3,7 @@ import receiveMessage from './receiveMessage';
 import sendMessage from './sendMessage';
 import createQueue from './createQueue';
 import listQueues from './listQueues';
+import deleteQueue from './deleteQueue';
 
 class MessageBus {
   constructor() {
@@ -37,6 +38,15 @@ class MessageBus {
       return 'Must submit a valid queue name!';
     }
     return receiveMessage(this.queueUrls[queueName]);
+  }
+
+  deleteQueue(queueName) {
+    if (!queueName || !this.queueUrls[queueName]) {
+      return 'Must submit a valid queue name to be deleted!';
+    }
+    const queueUrl = this.queueUrls[queueName];
+    delete this.queueUrls[queueName];
+    return deleteQueue(queueUrl);
   }
 }
 
