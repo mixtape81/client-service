@@ -19,7 +19,7 @@ class MessageBus {
 
   publishMessage(queueName, message) {
     if (!queueName || !message) {
-      return console.error('Must submit a queue name and message!');
+      return 'Must submit a queue name and message!';
     }
     if (!this.queueUrls[queueName]) {
       return createQueue(queueName)
@@ -34,7 +34,7 @@ class MessageBus {
 
   consumeMessage(queueName) {
     if (!queueName || !this.queueUrls[queueName]) {
-      return console.error('Must submit a valid queue name!');
+      return 'Must submit a valid queue name!';
     }
     return receiveMessage(this.queueUrls[queueName]);
   }

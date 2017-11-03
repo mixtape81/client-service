@@ -23,6 +23,8 @@ export default (queueUrl) => {
     sqs.receiveMessage(params, (err, data) => {
       if (err) {
         reject(err);
+      } else if (!data.Messages) {
+        resolve('No pending messages in the queue!');
       } else {
         const deleteParams = {
           QueueUrl: queueUrl,

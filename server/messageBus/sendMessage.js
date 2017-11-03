@@ -11,6 +11,6 @@ export default (queueUrl, message) => {
 
   return new Promise((resolve, reject) => {
     sqs.sendMessage(params, (err, data) =>
-      (err ? reject(err) : resolve(data.MessageId)));
+      (err ? reject(err) : resolve(data)));
   });
 };
