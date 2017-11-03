@@ -44,7 +44,7 @@ describe('Message Bus', function () {
       });
   });
 
-  it('Should only receive the top message in the queue', function (done) {
+  it('Should receive multiple messages from queue', function (done) {
     this.timeout(5000);
     MessageBus.publishMessage('TestQueue', testMessage)
       .then(() => MessageBus.publishMessage('TestQueue', 'Testing'))
