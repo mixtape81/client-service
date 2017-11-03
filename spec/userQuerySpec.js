@@ -9,7 +9,7 @@ import createLocations from '../data/locations';
 import createUsers from '../data/users';
 
 const request = supertest.agent(app);
-const port = 5000;
+const port = 5050;
 const filePath = '/psqltmp/users.csv';
 let server;
 

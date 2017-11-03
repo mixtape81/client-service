@@ -47,17 +47,15 @@ describe('Message Bus', function () {
   it('Should only receive the top message in the queue', function (done) {
     this.timeout(5000);
     MessageBus.publishMessage('TestQueue', testMessage)
-      .then(() => {
-        return MessageBus.publishMessage('TestQueue', 'Testing');
-      })
-      .then(() => {
-        return MessageBus.consumeMessage('TestQueue');
-      })
+      .then(() => MessageBus.publishMessage('TestQueue', 'Testing'))
+      .then(() => MessageBus.consumeMessage('TestQueue'))
       .then((resultOne) => {
         MessageBus.consumeMessage('TestQueue')
           .then((resultTwo) => {
-            expect(resultOne.Messages[0].Body).to.equal(testMessage);
-            expect(resultTwo.Messages[0].Body).to.equal('Testing');
+            const resultArray =
+              [resultOne.Messages[0].Body, resultTwo.Messages[0].Body];
+            expect(resultArray).to.include(testMessage);
+            expect(resultArray).to.include('Testing');
             done();
           });
       });
