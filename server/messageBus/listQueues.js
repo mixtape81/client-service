@@ -2,8 +2,12 @@ import AWS from 'aws-sdk';
 
 AWS.config.loadFromPath('./credentials/AWS.config.json');
 
-const sqs = new AWS.SQS({});
-const params = {};
+export default () => {
+  const sqs = new AWS.SQS({});
+  const params = {};
 
-sqs.listQueues(params, (err, data) =>
-  (err ? console.error(err) : console.log('Success!', data.QueueUrls)));
+  return new Promise((resolve, reject) => {
+    sqs.listQueues(params, (err, data) =>
+      (err ? reject(err) : resolve(data.QueueUrls)));
+  });
+};
