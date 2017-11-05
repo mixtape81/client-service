@@ -85,9 +85,8 @@ const yyyymmdd = (date) => {
 const formatArray = array =>
   JSON.stringify(array).replace(/\[/g, '{').replace(/]/g, '}');
 
-const generateUserOptions = (id, batch, filePath) => {
+const generateUserOptions = (filePath) => {
   const options = [];
-  options.push((1000 * batch) + id);
   options.push(generateAge());
   options.push(generatePaidStatus());
   options.push(formatArray(generateFavoriteArtists()));
@@ -102,12 +101,12 @@ const generateUserOptions = (id, batch, filePath) => {
   });
 };
 
-export default (batch, filePath, cb) => {
+export default (filePath, cb) => {
   const promiseArray = [];
   fs.writeFile(filePath, '', (err) => {
     if (err) throw err;
     for (let i = 1; i < 1001; i += 1) {
-      promiseArray.push(generateUserOptions(i, batch, filePath));
+      promiseArray.push(generateUserOptions(filePath));
     }
     Promise.all(promiseArray).then(results => cb(results));
   });
