@@ -1,11 +1,11 @@
 /* eslint no-param-reassign: 0 */
 
-import createLocations from './locations';
+import fs from 'fs';
 import createUsers from './users';
 import db from '../database/database';
 
 const filePath = '/psqltmp/users.csv';
-const batches = (10000000 / 1000);
+const batches = (1);
 let curBatch = 0;
 
 const createUserBatches = () => {
@@ -21,5 +21,10 @@ const createUserBatches = () => {
   }
 };
 
-createLocations().then(() => createUserBatches()).catch(err =>
-  console.error(err));
+fs.copyFile('./data/cities.csv', '/psqltmp/cities.csv', (err) => {
+  if (err) throw err;
+  db.db.query('COPY locations(city,latitude,longitude,population) FROM' +
+  '\'/psqltmp/cities.csv\' DELIMITER \',\'').then(() =>
+    createUserBatches()).catch(error =>
+    console.error(error));
+});

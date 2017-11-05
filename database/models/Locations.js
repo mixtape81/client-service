@@ -6,7 +6,10 @@ const LocationSchema = {
     primaryKey: true,
     autoIncrement: true
   },
-  name: Sequelize.STRING
+  city: Sequelize.STRING,
+  latitude: Sequelize.STRING,
+  longitude: Sequelize.STRING,
+  population: Sequelize.STRING
 };
 
 export default LocationSchema;
