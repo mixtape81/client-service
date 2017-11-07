@@ -9,7 +9,7 @@ const LocationSchema = {
   city: Sequelize.STRING,
   latitude: Sequelize.STRING,
   longitude: Sequelize.STRING,
-  population: Sequelize.STRING
+  population: Sequelize.INTEGER
 };
 
 export default LocationSchema;
