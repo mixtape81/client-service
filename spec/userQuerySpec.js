@@ -5,37 +5,39 @@ import supertest from 'supertest';
 import { expect } from 'chai';
 import app from '../server/app';
 import db from '../database/database';
-import createLocations from '../data/locations';
-import createUsers from '../data/users';
+import generateData from '../data/generateData';
 
 const request = supertest.agent(app);
 const port = 5050;
-const filePath = '/psqltmp/users.csv';
 let server;
 
 describe('GraphQL queries', function () {
-  this.timeout(6000);
+  this.timeout(10000);
   before(function (done) {
     db.User.drop()
       .then(() => db.Location.drop())
       .then(() => db.Location.sync({ force: true }))
       .then(() => db.User.sync({ force: true }))
-      .then(() => createLocations())
-      .then(() => createUsers(0, filePath, () => {
-        db.db.query(`COPY users FROM '${filePath}' DELIMITER ';'`)
-          .then(() => done());
-      }));
+      .then(() => generateData())
+      .then(() => {
+        done();
+      });
+  });
 
-    beforeEach(() => {
-      server = app.listen(port);
-    });
+  beforeEach((done) => {
+    server = app.listen(port);
+    done();
+  });
 
-    afterEach(() => server.close());
+  afterEach((done) => {
+    server.close();
+    done();
+  });
 
-    after(() => {
-      db.User.drop()
-        .then(() => db.Location.drop());
-    });
+  after((done) => {
+    db.User.drop()
+      .then(() => db.Location.drop())
+      .then(() => done());
   });
 
   it('Should return JSON object', function (done) {
@@ -124,11 +126,11 @@ describe('GraphQL queries', function () {
       });
   });
 
-  it('Should resolve the location name', function (done) {
+  it('Should resolve the location city name', function (done) {
     request
-      .post('/graphql?query={users(id:[1]){location{name}}}')
+      .post('/graphql?query={users(id:[1]){location{city}}}')
       .then((results) => {
-        expect(typeof results.body.data.users[0].location.name ===
+        expect(typeof results.body.data.users[0].location.city ===
           'string').to.be.true;
         done();
       });
