@@ -1,25 +1,30 @@
 import fs from 'fs';
+import db from '../database/database';
 
 const chanceGenerator = () => Math.floor(Math.random() * 101);
 
-const generateLocationId = () => {
-  const chance = chanceGenerator();
-  if (chance < 25) {
-    return 1;
-  } else if (chance < 35) {
-    return 2;
-  } else if (chance < 43) {
-    return 3;
-  } else if (chance < 50) {
-    return 4;
-  } else if (chance < 65) {
-    return (Math.ceil(Math.random() * 3)) + 4;
-  } else if (chance < 73) {
-    return (Math.ceil(Math.random() * 2)) + 7;
-  } else if (chance < 91) {
-    return (Math.ceil(Math.random() * 6)) + 9;
+const generateLocationChances = () => db.Location.findAll()
+  .then((results) => {
+    let totalPop = 0;
+    const cityPop = {};
+    let percentage = 0;
+    results.forEach((result) => {
+      totalPop += result.population;
+    });
+    results.forEach((result) => {
+      percentage += result.population / totalPop;
+      cityPop[result.id] = percentage;
+    });
+    return cityPop;
+  });
+
+const generateLocationId = (cityPop) => { // eslint-disable-line consistent-return
+  const random = Math.random();
+  for (const key of Object.keys(cityPop)) { // eslint-disable-line no-restricted-syntax
+    if (random <= cityPop[key]) {
+      return Number(key);
+    }
   }
-  return (Math.ceil(Math.random() * 5)) + 15;
 };
 
 const generateAge = () => {
@@ -85,29 +90,29 @@ const yyyymmdd = (date) => {
 const formatArray = array =>
   JSON.stringify(array).replace(/\[/g, '{').replace(/]/g, '}');
 
-const generateUserOptions = (id, batch, filePath) => {
-  const options = [];
-  options.push((1000 * batch) + id);
-  options.push(generateAge());
-  options.push(generatePaidStatus());
-  options.push(formatArray(generateFavoriteArtists()));
-  const favoriteGenres = generateFavoriteGenres();
-  options.push(formatArray(favoriteGenres));
-  options.push(favoriteGenres[0]);
-  options.push(yyyymmdd(generateJoinDate(new Date(2014, 0, 1), new Date(2017, 5, 1))));
-  options.push(generateLocationId());
-  return new Promise((resolve) => {
-    fs.appendFile(filePath, `${options.join(';')}\n`, result =>
-      resolve(result));
+const generateUserOptions = filePath => generateLocationChances()
+  .then((cityPop) => {
+    const options = [];
+    options.push(generateAge());
+    options.push(generatePaidStatus());
+    options.push(formatArray(generateFavoriteArtists()));
+    const favoriteGenres = generateFavoriteGenres();
+    options.push(formatArray(favoriteGenres));
+    options.push(favoriteGenres[0]);
+    options.push(yyyymmdd(generateJoinDate(new Date(2014, 0, 1), new Date(2017, 5, 1))));
+    options.push(generateLocationId(cityPop));
+    return new Promise((resolve) => {
+      fs.appendFile(filePath, `${options.join(';')}\n`, result =>
+        resolve(result));
+    });
   });
-};
 
-export default (batch, filePath, cb) => {
+export default (filePath, cb) => {
   const promiseArray = [];
   fs.writeFile(filePath, '', (err) => {
     if (err) throw err;
     for (let i = 1; i < 1001; i += 1) {
-      promiseArray.push(generateUserOptions(i, batch, filePath));
+      promiseArray.push(generateUserOptions(filePath));
     }
     Promise.all(promiseArray).then(results => cb(results));
   });

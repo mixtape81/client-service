@@ -3,6 +3,7 @@ import graphqlHTTP from 'express-graphql';
 import DataLoader from 'dataloader';
 import schema from './graphql/schema';
 import db from '../database/database';
+import messageBus from './messageBus/messageBus';
 
 const app = express();
 

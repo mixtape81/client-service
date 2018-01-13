@@ -2,10 +2,14 @@ import AWS from 'aws-sdk';
 
 AWS.config.loadFromPath('./credentials/AWS.config.json');
 
-const sqs = new AWS.SQS({});
-const params = {
-  QueueName: 'Mixtape'
-};
+export default (queueName) => {
+  const sqs = new AWS.SQS({});
+  const params = {
+    QueueName: queueName
+  };
 
-sqs.getQueueUrl(params, (err, data) =>
-  (err ? console.error(err) : console.log(data.QueueUrl)));
+  return new Promise((resolve, reject) => {
+    sqs.getQueueUrl(params, (err, data) =>
+      (err ? reject(err) : resolve(data.QueueUrl)));
+  });
+};

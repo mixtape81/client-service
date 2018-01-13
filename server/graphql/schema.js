@@ -31,9 +31,21 @@ const locationType = new GraphQLObjectType({
       type: (GraphQLInt),
       description: 'Location ID'
     },
-    name: {
+    city: {
       type: (GraphQLString),
       description: 'Location name'
+    },
+    latitude: {
+      type: (GraphQLString),
+      description: 'Location latitude coordinate'
+    },
+    longitude: {
+      type: (GraphQLString),
+      description: 'Location longitude coordinate'
+    },
+    population: {
+      type: (GraphQLInt),
+      description: 'Location population'
     }
   })
 });
