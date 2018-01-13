@@ -17,6 +17,7 @@ for (let i = 0; i < 5; i += 1) {
 }
 
 describe('Message Bus', function () {
+  this.timeout(10000);
   it('Should grab all existing queue urls', function (done) {
     MessageBus.storeUrls()
       .then(() => {
@@ -100,7 +101,7 @@ describe('Message Bus', function () {
   });
 
   it('Should create a new queue on publish', function (done) {
-    this.timeout(5000);
+    this.timeout(10000);
     MessageBus.publishMessage(randomQueueName, testMessage)
       .then((result) => {
         expect(result.MessageId).to.exist;
@@ -115,6 +116,7 @@ describe('Message Bus', function () {
   });
 
   it('Should receive message from the newly created queue', function (done) {
+    this.timeout(10000);
     MessageBus.consumeMessage(randomQueueName)
       .then((result) => {
         expect(result.Messages[0].Body).to.equal(testMessage);
